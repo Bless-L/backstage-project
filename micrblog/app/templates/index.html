@@ -1,0 +1,30 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 size="7">Hi, {{ g.user.nickname }}!</h1>
+   <div style="background:#F4F4F4;height:100px">
+      <form action="" method="post" name="post" role="form">
+         {{ form.hidden_tag() }}      
+        <div style="padding-left:200px;padding-top:20px"  >
+              <label for="name">Say something:   </lable>
+                {{ form.post(size=30, maxlength=140) }}
+                {% for error in form.post.errors %}
+              <span style="color: red;">[{{ error }}]</span><br>
+                 {% endfor %}
+                 &nbsp;&nbsp;
+              <button type="submit" class="btn btn-primary btn-xs">Post！</button>
+        </div>   
+      </form>
+  </div>
+  <!-- posts is a Paginate object -->
+   {% for post in posts.items %}
+	    {% include 'post.html' %}
+   {% endfor %}
+   <div style="position: absolute; bottom: 10px;">
+      {% if posts.has_prev %}<a href="{{ url_for('index', page=posts.prev_num) }}"  class="btn btn-primary " role="button">Newer posts</a>
+      {% else %}<button type="button" class="btn btn-primary disabled">Newer posts</button>{% endif %} 
+      {% if posts.has_next %}<a href="{{ url_for('index', page=posts.next_num) }}"  class="btn btn-primary " role="button">Older posts</a>
+      {% else %}<button type="button" class="btn btn-primary disabled">Older posts</button>{% endif %}
+   </div>
+{% endblock %}

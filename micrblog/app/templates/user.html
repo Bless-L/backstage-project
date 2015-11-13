@@ -1,0 +1,44 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background:#F4F4F4">
+  <div class="container">
+     <div class="row">
+      <img src="nihao.jpg">
+          <h1>User: {{ user.nickname }}</h1>
+          {% if user.about_me %}
+          <div class="row">
+          <strong>{{ user.about_me }}</strong>
+          </div>
+          {% endif %}
+          {% if user.last_seen %}
+          <div class="row">
+          <p><i>Last seen on: {{ user.last_seen }}</i></p>
+          </div>
+          {% endif %}
+          <div class="row">
+              <p>{{ user.followers.count() }} followers | 
+          {% if user.id == g.user.id %}
+              <a href="{{ url_for('edit') }}">Edit your profile</a>
+          {% elif not g.user.is_following(user) %}
+              <a href="{{ url_for('follow', nickname=user.nickname) }}">Follow</a>
+          {% else %}
+              <a href="{{ url_for('unfollow', nickname=user.nickname) }}">Unfollow</a>         
+          {% endif %}
+          </p>
+      </div>
+    </div>
+  </div>
+</div>
+  <hr>
+  {% for post in posts.items %}
+      {% include 'post.html' %}
+  {% endfor %}
+  <div style="position: absolute; bottom: 10px;">
+      {% if posts.has_prev %}<a href="{{ url_for('index', page=posts.prev_num) }}"  class="btn btn-primary " role="button">Newer posts</a>
+      {% else %}<button type="button" class="btn btn-primary disabled">Newer posts</button>{% endif %} 
+      {% if posts.has_next %}<a href="{{ url_for('index', page=posts.next_num) }}"  class="btn btn-primary " role="button">Older posts</a>
+      {% else %}<button type="button" class="btn btn-primary disabled">Older posts</button>{% endif %}
+  </div>
+{% endblock %}
